@@ -1,5 +1,5 @@
 # MyProject
-#JAVA #JavaScript #Spring
+#JAVA #Spring Framework #JavaScript 
 
 팀으로 작업한 프로젝트 입니다.
 
