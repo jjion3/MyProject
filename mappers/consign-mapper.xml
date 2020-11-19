@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mappers.consign-mapper">
+
+	<insert id="insertConsign">
+	
+	</insert>
+	
+	<select id="consignList" resultType="ConsignVo">
+		select * 
+		from (select rownum rnum, a.*
+		      from (select c.cs_img1, c.cs_name, c.cs_date, s.p_name, br.b_name, b.b_price, g.g_discount
+					from tbl_consign c, code_progress s, code_brand br, tbl_bid b, tbl_product p, tbl_member m, code_grade g
+					where c.cs_state = s.p_code and br.b_code = c.cs_brand and c.m_id = p.m_id and c.m_id = m.m_id and m.m_grade = g.g_code and p.pno = b.bno and c.m_id = #{m_id}) a)
+		where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<select id="getCount" resultType="int">
+		select count(*) from tbl_consign
+		where m_id = #{m_id}
+	</select>
+
+</mapper>

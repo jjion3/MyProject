@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mappers.faq-mapper">
+	
+	<!-- faq 목록 (페이징) -->
+	<select id="faqList" resultType="FaqVo">
+		select *
+			from (select rownum rnum, a.* 
+      			from (select * from tbl_faq
+      			<include refid="search"></include>
+        		order by fno asc) a)
+		where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 게시글 수 -->
+	<select id="getCount" resultType="int">
+		select count(*) from tbl_faq
+		<include refid="search"></include>
+	</select>
+	
+		<!-- 게시글 수 -->
+	<select id="getCount2" resultType="int">
+		select count(*) from tbl_faq
+		<include refid="search"></include>
+	</select>
+	
+	<!-- faq f_cate = f1001 회원 관련 목록 -->
+	<select id="faq1" resultType="FaqVo">
+		select * from tbl_faq
+		where f_cate = 'f1001'
+	</select>
+	
+	<!-- faq f_cate = f1002 경매 관련 목록 -->
+	<select id="faq2" resultType="FaqVo">
+		select * from tbl_faq
+		where f_cate = 'f1002'
+	</select>
+	
+	<!-- faq f_cate = f1003 경매 관련 목록 -->
+	<select id="faq3" resultType="FaqVo">
+		select * from tbl_faq
+		where f_cate = 'f1003'
+	</select>
+	
+	<!-- faq f_cate = f1004 경매 관련 목록 -->
+	<select id="faq4" resultType="FaqVo">
+		select * from tbl_faq
+		where f_cate = 'f1004'
+	</select>
+	
+	<!-- faq f_cate = f1005 경매 관련 목록 -->
+	<select id="faq5" resultType="FaqVo">
+		select * from tbl_faq
+		where f_cate = 'f1005'
+	</select>
+	
+	<!-- faq 내용보기 -->
+	<select id="faqRead" resultType="FaqVo">
+		select * from tbl_faq
+		where fno = #{fno}
+	</select>
+	
+	<!-- faq 입력 - 관리자 -->
+	<insert id="faqInsert">
+		insert into tbl_faq (fno, f_title, f_content, f_cate)
+		values (seq_fno.nextval, #{f_title}, #{f_content}, #{f_cate})	
+	</insert>
+	
+	<!-- faq 수정 - 관리자 -->
+	<update id="faqUpdate">
+		update tbl_faq set
+			f_title = #{f_title},
+			f_content = #{f_content},
+			f_cate = #{f_cate}
+		where fno = #{fno}
+	</update>
+	
+	<!-- faq 삭제 - 관리자 -->
+	<delete id="faqDelete">
+		delete from tbl_faq
+		where fno = #{fno}
+	</delete>
+	
+	<!-- faq 삭제 (체크박스) - 관리자 -->
+	<delete id="faqDeleteChk">
+		delete from tbl_faq
+		where fno = #{fno}
+	</delete>
+	
+	<!-- 검색 -->
+	<sql id="search">
+		<if test="searchType != null">
+			<choose>
+				<when test='searchType == "cate"'>
+					, code_f_cate c
+					where f_cate = c.f_cate_code and c.f_cate_name = #{keyword} 
+				</when>
+				<when test='searchType == "t"'>
+					where f_title like '%' || #{keyword} || '%'
+				</when>
+				<when test='searchType == "c"'>
+					where f_content like '%' || #{keyword} || '%'
+				</when>
+				<when test='searchType == "tc"'>
+					where f_content like '%' || #{keyword} || '%'
+					or f_title like '%' || #{keyword} || '%'
+				</when>
+			</choose>
+		</if>
+	</sql>
+	
+</mapper>
